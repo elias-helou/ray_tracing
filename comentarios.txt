@@ -1,0 +1,93 @@
+INSTALANDO O CUDA (runtime e toolkit)
+
+Eu uso Ubuntu 22.04. Instalo o gcc padrão, que é o seguinte:
+
+$ gcc --version
+gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+Copyright (C) 2021 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Daí instalo CUDA 11.7.1:
+
+$ wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb
+$ sudo dpkg -i cuda-keyring*.deb
+$ sudo apt-get update
+$ sudo apt-get install cuda-11-7
+
+Então configuro o caminho de executáveis e de bibliotecas compartilhadas
+adicionando as seguintes linhas ao script de inicialização de sessão do bash,
+que é o ~/.bashrc:
+
+export PATH=$PATH:/usr/local/cuda-11.7/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-11.7/lib64
+
+Depois é necessário rodar o ~/.bashrc (que não está marcado como executável)
+para não ter quer sair e entrar da sessão:
+
+source ~/.bashrc
+
+Pronto, o runtime e a toolkit do CUDA estão instalados e configurados. Claro
+que você tem que ter o driver proprietário da NVIDIA compatível com sua placa de
+vídeo instalado. E há uma tabela de comaptibilidade com SOs e versões do CUDA
+que podem ter que ser diferentes quando a GPU é mais antiga.
+
+Para verificar se seu driver e sua placa estão corretamente configurados e são
+compatíveis, você pode usar o comando nvida-smi:
+
+$ nvidia-smi
+Failed to initialize NVML: Driver/library version mismatch
+NVML library version: 535.104
+
+Meu Deus, o que teria acontecido?! Acontece que eu tinha instalado o cuda 12 porque se não
+especificar a versão em "sudo apt install cuda-11-7", ele instala a mais recente. Eu tive
+que a desinstalar antes de prosseguir e acho que isso causou esse missmatch. Depois de
+reinicar o computador (usuários de Windows, regojizem-se), funcionou:
+
+$ nvidia-smi
+Fri Sep  1 21:38:03 2023
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.104.05             Driver Version: 535.104.05   CUDA Version: 12.2     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  NVIDIA GeForce GTX 1050        On  | 00000000:01:00.0 Off |                  N/A |
+| N/A   66C    P0              N/A / ERR! |    417MiB /  4096MiB |      0%      Default |
+|                                         |                      |                  N/A |
++-----------------------------------------+----------------------+----------------------+
+
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|    0   N/A  N/A      1590      G   /usr/lib/xorg/Xorg                          267MiB |
+|    0   N/A  N/A      1959      G   /usr/bin/gnome-shell                        149MiB |
++---------------------------------------------------------------------------------------+
+
+No meu caso deu pra ler o nome inteiro da placa, mas esse pode não ser seu o caso, daí:
+
+$ nvidia-smi -L
+GPU 0: NVIDIA GeForce GTX 1050 (UUID: GPU-9a3bae4b-43e0-bf8e-d8b8-7f3278de1348)
+
+Sobre a compilação, é importante notar que a segunte linha do Makefile é sensível às capacidades
+computacionais de sua GPU:
+
+ARCHS := -gencode arch=compute_52,code=compute_52
+
+Altere-a de acordo com sua plataforma.
+
+INSTALANDO O PYTORCH
+
+$ sudo apt install python3-torch
+
+Legal, funcionou, SQN. Tente criar um tensor na GPU e obtenha o erro:
+AssertionError: Torch not compiled with CUDA enabled
+
+Mas, se tiver o pip instalado (e é pra ter), é só fazer
+
+$ pip install torch
+
+Que terá o torch instalado com suporte à sua GPU.
