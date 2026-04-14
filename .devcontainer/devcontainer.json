@@ -1,6 +1,6 @@
 {
-    "name": "CUDA Development Ubuntu 24.04",
-    "image": "nvidia/cuda:12.6.1-devel-ubuntu24.04",
+    "name": "Ray Tracing",
+    "image": "ray_tracing",
     "runArgs": [,
     	"--rm",
     	"-it",
