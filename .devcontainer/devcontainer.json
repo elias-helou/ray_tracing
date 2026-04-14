@@ -1,0 +1,20 @@
+{
+    "name": "CUDA Development Ubuntu 24.04",
+    "image": "nvidia/cuda:12.6.1-devel-ubuntu24.04",
+    "runArgs": [,
+    	"--rm",
+    	"-it",
+        "--gpus=all",
+        "-v", "/home/elias/ray_tracing:/app"        
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "nvidia.nsight-vscode-edition"
+            ]
+        }
+    },
+    "remoteUser": "root"
+}
+
