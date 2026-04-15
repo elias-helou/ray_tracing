@@ -11,7 +11,8 @@
         "vscode": {
             "extensions": [
                 "ms-vscode.cpptools",
-                "nvidia.nsight-vscode-edition"
+                "nvidia.nsight-vscode-edition",
+                "ms-toolsai.jupyter"
             ]
         }
     },
