@@ -15,5 +15,5 @@ RUN apt update && \
     pip install --upgrade pip && \
     pip install jupyter && \
     pip install torch && \
-    pip install matplotlib && \
-    make
+    pip install matplotlib
+
