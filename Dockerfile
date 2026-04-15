@@ -13,6 +13,7 @@ RUN apt update && \
     python3 -m venv venv && \
     source venv/bin/activate && \
     pip install --upgrade pip && \
+    pip install jupyter && \
     pip install torch && \
     pip install matplotlib && \
     make
