@@ -1,10 +1,11 @@
 {
     "name": "Ray Tracing",
     "image": "ray_tracing",
-    "runArgs": [,
+    "runArgs": [
     	"--rm",
     	"-it",
         "--gpus=all",
+        "--cap-add=SYS_ADMIN",
         "-v", ".:/app"
     ],
     "customizations": {
@@ -18,4 +19,3 @@
     },
     "remoteUser": "root"
 }
-
